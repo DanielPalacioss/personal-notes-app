@@ -1,4 +1,6 @@
-import { PartialType } from '@nestjs/mapped-types';
-import { CreateDirectoryDto } from './create-directory.dto';
+import { Directory } from '@prisma/client';
 
-export class UpdateDirectoryDto extends PartialType(CreateDirectoryDto) {}
+export type UpdateDirectoryDto = Omit<
+  Directory,
+  'id' | 'userId' | 'createdAt' | 'updatedAt'
+>;

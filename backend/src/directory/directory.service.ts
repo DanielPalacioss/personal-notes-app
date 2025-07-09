@@ -1,26 +1,39 @@
 import { Injectable } from '@nestjs/common';
 import { CreateDirectoryDto } from './dto/create-directory.dto';
+import { PrismaService } from 'src/prisma/prisma.service';
 import { UpdateDirectoryDto } from './dto/update-directory.dto';
 
 @Injectable()
 export class DirectoryService {
+  constructor(private prismaService: PrismaService) {}
+
   create(createDirectoryDto: CreateDirectoryDto) {
-    return 'This action adds a new directory';
+    return this.prismaService.directory.create({
+      data: createDirectoryDto,
+    });
   }
 
   findAll() {
-    return `This action returns all directory`;
+    return this.prismaService.directory.findMany({
+      select: {
+        id: true,
+        directoryName: true,
+        createdAt: true,
+        updatedAt: true,
+      },
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} directory`;
+  update(id: string, updateDirectoryDto: UpdateDirectoryDto) {
+    return this.prismaService.directory.update({
+      where: { id },
+      data: updateDirectoryDto,
+    });
   }
 
-  update(id: number, updateDirectoryDto: UpdateDirectoryDto) {
-    return `This action updates a #${id} directory`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} directory`;
+  remove(id: string) {
+    return this.prismaService.directory.delete({
+      where: { id },
+    });
   }
 }
