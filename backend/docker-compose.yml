@@ -1,0 +1,24 @@
+services:
+  sql-server:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sqlserver
+    ports:
+      - "1433:1433"
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - personal_notes_data:/var/opt/mssql
+
+  db-init:
+    image: mcr.microsoft.com/mssql-tools
+    depends_on:
+      - sql-server
+    entrypoint: >
+      /bin/bash -c "
+        sleep 20 &&
+        /opt/mssql-tools/bin/sqlcmd -S sql-server -U sa -P ${DB_PASSWORD} -Q 'IF DB_ID('personal_notes_db') IS NULL CREATE DATABASE personal_notes_db'
+      "
+
+volumes:
+  personal_notes_data:
