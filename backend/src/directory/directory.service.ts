@@ -2,12 +2,17 @@ import { Injectable } from '@nestjs/common';
 import { CreateDirectoryDto } from './dto/create-directory.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
 import { UpdateDirectoryDto } from './dto/update-directory.dto';
+import { EntityValidatorService } from '../entity-validator/entity-validator.service';
 
 @Injectable()
 export class DirectoryService {
-  constructor(private prismaService: PrismaService) {}
+  constructor(
+    private prismaService: PrismaService,
+    private entityValidator: EntityValidatorService,
+  ) {}
 
-  create(createDirectoryDto: CreateDirectoryDto) {
+  async create(createDirectoryDto: CreateDirectoryDto) {
+    await this.entityValidator.ensureUserExists(createDirectoryDto.userId);
     return this.prismaService.directory.create({
       data: createDirectoryDto,
     });
@@ -24,14 +29,16 @@ export class DirectoryService {
     });
   }
 
-  update(id: string, updateDirectoryDto: UpdateDirectoryDto) {
+  async update(id: string, updateDirectoryDto: UpdateDirectoryDto) {
+    await this.entityValidator.ensureDirectoryExists(id);
     return this.prismaService.directory.update({
       where: { id },
       data: updateDirectoryDto,
     });
   }
 
-  remove(id: string) {
+  async remove(id: string) {
+    await this.entityValidator.ensureDirectoryExists(id);
     return this.prismaService.directory.delete({
       where: { id },
     });
