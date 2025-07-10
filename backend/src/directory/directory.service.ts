@@ -11,10 +11,10 @@ export class DirectoryService {
     private entityValidator: EntityValidatorService,
   ) {}
 
-  async create(createDirectoryDto: CreateDirectoryDto) {
-    await this.entityValidator.ensureUserExists(createDirectoryDto.userId);
+  async create(createDirectoryDto: CreateDirectoryDto, userId: string) {
+    await this.entityValidator.ensureUserExists(userId);
     return this.prismaService.directory.create({
-      data: createDirectoryDto,
+      data: { ...createDirectoryDto, userId },
       select: { id: true, directoryName: true, createdAt: true },
     });
   }
@@ -32,18 +32,28 @@ export class DirectoryService {
     });
   }
 
-  async update(id: string, updateDirectoryDto: UpdateDirectoryDto) {
-    await this.entityValidator.ensureDirectoryExists(id);
+  async update(
+    id: string,
+    updateDirectoryDto: UpdateDirectoryDto,
+    userId: string,
+  ) {
+    await this.entityValidator.ensureDirectoryExists(id, userId);
     return this.prismaService.directory.update({
-      where: { id },
+      where: { id, userId },
       data: updateDirectoryDto,
+      select: {
+        directoryName: true,
+      },
     });
   }
 
-  async remove(id: string) {
-    await this.entityValidator.ensureDirectoryExists(id);
+  async remove(id: string, userId: string) {
+    await this.entityValidator.ensureDirectoryExists(id, userId);
     return this.prismaService.directory.delete({
-      where: { id },
+      where: { id, userId },
+      select: {
+        directoryName: true,
+      },
     });
   }
 }

@@ -1,9 +1,14 @@
-import { Injectable } from '@nestjs/common';
+import {
+  ConflictException,
+  Injectable,
+  InternalServerErrorException,
+} from '@nestjs/common';
 import { CreateUserDto } from './dtos/create-user.dto';
 import { UpdateUserDto } from './dtos/update-user.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { EntityValidatorService } from '../entity-validator/entity-validator.service';
 import * as bcrypt from 'bcrypt';
+import { PrismaClientKnownRequestError } from 'generated/prisma/runtime/library';
 
 @Injectable()
 export class UserService {
@@ -14,10 +19,23 @@ export class UserService {
 
   async create(createUserDto: CreateUserDto) {
     const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
-    return this.prismaService.user.create({
-      data: { ...createUserDto, password: hashedPassword },
-      select: { firstName: true },
-    });
+    try {
+      return this.prismaService.user.create({
+        data: { ...createUserDto, password: hashedPassword },
+        select: { firstName: true },
+      });
+    } catch (e) {
+      if (e instanceof PrismaClientKnownRequestError) {
+        if (e.code === 'P2002') {
+          // Error de clave única duplicada (por ejemplo, email o username ya existen)
+          throw new ConflictException('Email or username already exists');
+        }
+      }
+      // Otro error inesperado
+      throw new InternalServerErrorException(
+        'Unexpected error while creating user',
+      );
+    }
   }
 
   findAll() {
@@ -38,6 +56,11 @@ export class UserService {
     return this.prismaService.user.update({
       data: updateUserDto,
       where: { id },
+      select: {
+        firstName: true,
+        lastName: true,
+        email: true,
+      },
     });
   }
 

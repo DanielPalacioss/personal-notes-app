@@ -5,14 +5,13 @@ import { PrismaService } from '../prisma/prisma.service';
 export class EntityValidatorService {
   constructor(private prismaService: PrismaService) {}
 
-  async ensureDirectoryExists(id: string) {
+  async ensureDirectoryExists(id: string, userId: string) {
     const directoryExists = await this.prismaService.directory.findUnique({
-      where: { id },
+      where: { id, userId },
     });
     if (!directoryExists) {
       throw new NotFoundException(`Directory with id ${id} not found`);
     }
-    return directoryExists;
   }
 
   async ensureUserExists(id: string) {
@@ -22,7 +21,6 @@ export class EntityValidatorService {
     if (!userExists) {
       throw new NotFoundException(`User with id ${id} not found`);
     }
-    return userExists;
   }
 
   async ensureNoteExists(id: string) {

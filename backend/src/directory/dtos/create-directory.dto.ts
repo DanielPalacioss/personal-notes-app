@@ -1,4 +1,4 @@
-import { IsNotEmpty, IsString, IsUUID, Length } from 'class-validator';
+import { IsNotEmpty, IsString, Length } from 'class-validator';
 
 export class CreateDirectoryDto {
   @IsString({ message: 'The directory name must be string' })
@@ -7,8 +7,4 @@ export class CreateDirectoryDto {
     message: 'The directory name must be between 3 and 50 characters',
   })
   directoryName: string;
-
-  @IsNotEmpty({ message: 'The user id cannot be empty' })
-  @IsUUID(undefined, { message: 'The user id must be a valid UUID' })
-  userId: string;
 }

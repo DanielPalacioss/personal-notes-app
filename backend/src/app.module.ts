@@ -5,10 +5,11 @@ import { DirectoryModule } from './directory/directory.module';
 import { PrismaService } from './prisma/prisma.service';
 import { EntityValidatorService } from './entity-validator/entity-validator.service';
 import { AuthModule } from './auth/auth.module';
+import { RoleValidatorService } from './role-validator/role-validator.service';
 
 @Module({
   imports: [NoteModule, UserModule, DirectoryModule, AuthModule],
   controllers: [],
-  providers: [PrismaService, EntityValidatorService],
+  providers: [PrismaService, EntityValidatorService, RoleValidatorService],
 })
 export class AppModule {}

@@ -4,9 +4,13 @@ import { GlobalExceptionFilter } from './common/filters/global-exception.filter'
 import { ValidationPipe } from '@nestjs/common';
 
 async function bootstrap() {
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-assignment,@typescript-eslint/no-require-imports
+  const cookieParser = require('cookie-parser');
   const app = await NestFactory.create(AppModule);
   app.useGlobalFilters(new GlobalExceptionFilter());
   app.setGlobalPrefix('api');
+  // eslint-disable-next-line @typescript-eslint/no-unsafe-call
+  app.use(cookieParser());
   app.useGlobalPipes(
     new ValidationPipe({
       whitelist: true, // elimina propiedades no definidas en el DTO

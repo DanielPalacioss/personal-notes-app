@@ -11,15 +11,19 @@ export class NoteService {
     private entityValidator: EntityValidatorService,
   ) {}
 
-  async create(createNoteDto: CreateNoteDto) {
-    await this.entityValidator.ensureDirectoryExists(createNoteDto.directoryId);
+  async create(createNoteDto: CreateNoteDto, userId: string) {
+    await this.entityValidator.ensureDirectoryExists(
+      createNoteDto.directoryId,
+      userId,
+    );
     return this.prismaService.note.create({
       data: createNoteDto,
       select: { id: true, title: true, content: true, createdAt: true },
     });
   }
 
-  findAll(directoryId: string) {
+  async findAll(directoryId: string, userId: string) {
+    await this.entityValidator.ensureDirectoryExists(directoryId, userId);
     return this.prismaService.note.findMany({
       select: {
         id: true,

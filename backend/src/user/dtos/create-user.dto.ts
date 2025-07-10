@@ -19,7 +19,7 @@ export class CreateUserDto {
   @IsString({ message: 'The last name must be string' })
   @IsNotEmpty({ message: 'The last name cannot be empty' })
   @Length(2, 30, {
-    message: 'The last name must be between 3 and 50 characters',
+    message: 'The last name must be between 3 30 characters',
   })
   lastName: string;
 
@@ -31,7 +31,7 @@ export class CreateUserDto {
   @IsString({ message: 'The username must be string' })
   @IsNotEmpty({ message: 'The username cannot be empty' })
   @Length(3, 15, {
-    message: 'The username must be between 3 and 50 characters',
+    message: 'The username must be between 3 and 15 characters',
   })
   username: string;
 
