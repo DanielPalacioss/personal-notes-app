@@ -1,0 +1,10 @@
+@startuml
+actor Usuario
+participant AuthService
+participant JwtService
+
+Usuario -> AuthService : generateToken(user)
+AuthService -> JwtService : sign(payload)
+JwtService --> AuthService : token
+AuthService --> Usuario : return token
+@enduml

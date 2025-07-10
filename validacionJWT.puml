@@ -1,0 +1,10 @@
+@startuml
+actor Navegador
+participant JwtStrategy
+participant Request
+
+Navegador -> JwtStrategy : Petición con cookie JWT
+JwtStrategy -> Request : extrae token
+JwtStrategy -> JwtStrategy : validate(payload)
+JwtStrategy --> Navegador : payload (userId, role, ...)
+@enduml

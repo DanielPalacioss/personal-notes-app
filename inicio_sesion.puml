@@ -1,0 +1,22 @@
+@startuml
+actor Usuario
+participant AuthService
+participant PrismaService as Prisma
+participant bcrypt
+
+Usuario -> AuthService : validateUser(usernameOrEmail, password)
+AuthService -> Prisma : user.findFirst(OR: email o username)
+Prisma --> AuthService : user
+alt usuario no encontrado
+  AuthService --> Usuario : throw BadRequestException
+else contraseña incorrecta
+  AuthService -> bcrypt : compare(password, user.password)
+  bcrypt --> AuthService : false
+  AuthService --> Usuario : throw BadRequestException
+else credenciales correctas
+  AuthService -> bcrypt : compare(password, user.password)
+  bcrypt --> AuthService : true
+  AuthService --> Usuario : return user
+end
+@enduml
+

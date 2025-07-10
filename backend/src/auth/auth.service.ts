@@ -1,9 +1,10 @@
 import { BadRequestException, Injectable } from '@nestjs/common';
 import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
-import { LoginDto } from './dtos/login.dto';
+import { LoginRequestDto } from './dtos/login-requestDto';
 import { PrismaService } from '../prisma/prisma.service';
 import { Payload } from './interfaces/auth-interfaces';
+import { LoginResponseDto } from './dtos/login-responseDto';
 
 @Injectable()
 export class AuthService {
@@ -15,7 +16,6 @@ export class AuthService {
   generateToken(user: {
     id: string;
     firstName: string;
-    password: string;
     role: string;
   }) {
     const payload: Payload = {
@@ -25,7 +25,7 @@ export class AuthService {
     return this.jwtService.sign(payload);
   }
 
-  async validateUser({ usernameOrEmail, password }: LoginDto) {
+  async validateUser({ usernameOrEmail, password }: LoginRequestDto) {
     const user = await this.prismaService.user.findFirst({
       where: {
         OR: [{ email: usernameOrEmail }, { username: usernameOrEmail }],
@@ -47,7 +47,7 @@ export class AuthService {
     if (!isPasswordValid) {
       throw new BadRequestException('Incorrect password');
     }
-
-    return user;
+    const { password: unpassword, ...safeUser } = user;
+    return safeUser;
   }
 }

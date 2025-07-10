@@ -1,0 +1,13 @@
+@startuml
+actor Usuario
+participant DirectoryService
+participant EntityValidatorService as Validator
+participant PrismaService as Prisma
+
+Usuario -> DirectoryService : create(dto, userId)
+DirectoryService -> Validator : ensureUserExists(userId)
+Validator --> DirectoryService : ok
+DirectoryService -> Prisma : directory.create(dto + userId)
+Prisma --> DirectoryService : directory info
+DirectoryService --> Usuario : return directory info
+@enduml

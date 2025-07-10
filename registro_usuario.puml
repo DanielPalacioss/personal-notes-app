@@ -1,0 +1,17 @@
+@startuml
+actor Usuario
+participant UserService
+participant PrismaService as Prisma
+participant bcrypt
+
+Usuario -> UserService : create(dto)
+UserService -> bcrypt : hash(dto.password)
+bcrypt --> UserService : hashedPassword
+UserService -> Prisma : user.create(dto + hashedPassword)
+alt usuario duplicado (P2002)
+  Prisma --> UserService : throw ConflictException
+else éxito
+  Prisma --> UserService : user
+end
+UserService --> Usuario : return user
+@enduml

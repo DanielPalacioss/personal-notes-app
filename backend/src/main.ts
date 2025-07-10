@@ -9,6 +9,12 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   app.useGlobalFilters(new GlobalExceptionFilter());
   app.setGlobalPrefix('api');
+  app.enableCors({
+    origin: ['http://localhost:3000'],
+    methods: 'GET,PATCH,POST,DELETE',
+    credentials: true,
+  });
+
   // eslint-disable-next-line @typescript-eslint/no-unsafe-call
   app.use(cookieParser());
   app.useGlobalPipes(

@@ -1,7 +1,7 @@
 import { Injectable } from '@nestjs/common';
-import { CreateDirectoryDto } from '././dtos/create-directory.dto';
+import { CreateDirectoryDto } from './dtos/create-directory.dto';
 import { PrismaService } from 'src/prisma/prisma.service';
-import { UpdateDirectoryDto } from '././dtos/update-directory.dto';
+import { UpdateDirectoryDto } from './dtos/update-directory.dto';
 import { EntityValidatorService } from '../entity-validator/entity-validator.service';
 
 @Injectable()

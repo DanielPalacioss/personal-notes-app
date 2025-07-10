@@ -1,6 +1,6 @@
 import { Injectable } from '@nestjs/common';
-import { CreateNoteDto } from '././dtos/create-note.dto';
-import { UpdateNoteDto } from '././dtos/update-note.dto';
+import { CreateNoteDto } from './dtos/create-note.dto';
+import { UpdateNoteDto } from './dtos/update-note.dto';
 import { PrismaService } from '../prisma/prisma.service';
 import { EntityValidatorService } from '../entity-validator/entity-validator.service';
 

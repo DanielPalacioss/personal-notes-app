@@ -1,0 +1,13 @@
+@startuml
+actor Usuario
+participant NoteService
+participant EntityValidatorService as Validator
+participant PrismaService as Prisma
+
+Usuario -> NoteService : create(dto, userId)
+NoteService -> Validator : ensureDirectoryExists(dto.directoryId, userId)
+Validator --> NoteService : ok
+NoteService -> Prisma : note.create(dto)
+Prisma --> NoteService : nota
+NoteService --> Usuario : return nota
+@enduml
