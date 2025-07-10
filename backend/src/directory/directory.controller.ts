@@ -9,8 +9,8 @@ import {
   UseFilters,
 } from '@nestjs/common';
 import { DirectoryService } from './directory.service';
-import { CreateDirectoryDto } from './dto/create-directory.dto';
-import { UpdateDirectoryDto } from './dto/update-directory.dto';
+import { CreateDirectoryDto } from '././dtos/create-directory.dto';
+import { UpdateDirectoryDto } from '././dtos/update-directory.dto';
 import { GlobalExceptionFilter } from '../common/filters/global-exception.filter';
 
 @UseFilters(GlobalExceptionFilter)
@@ -23,9 +23,9 @@ export class DirectoryController {
     return this.directoryService.create(createDirectoryDto);
   }
 
-  @Get()
-  findAll() {
-    return this.directoryService.findAll();
+  @Get(':userId')
+  findAll(@Param('userId') userId: string) {
+    return this.directoryService.findAll(userId);
   }
 
   @Patch(':id')

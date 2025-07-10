@@ -1,26 +1,50 @@
 import { Injectable } from '@nestjs/common';
-import { CreateUserDto } from './dto/create-user.dto';
-import { UpdateUserDto } from './dto/update-user.dto';
+import { CreateUserDto } from './dtos/create-user.dto';
+import { UpdateUserDto } from './dtos/update-user.dto';
+import { PrismaService } from '../prisma/prisma.service';
+import { EntityValidatorService } from '../entity-validator/entity-validator.service';
+import * as bcrypt from 'bcrypt';
 
 @Injectable()
 export class UserService {
-  create(createUserDto: CreateUserDto) {
-    return 'This action adds a new user';
+  constructor(
+    private prismaService: PrismaService,
+    private entityValidator: EntityValidatorService,
+  ) {}
+
+  async create(createUserDto: CreateUserDto) {
+    const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
+    return this.prismaService.user.create({
+      data: { ...createUserDto, password: hashedPassword },
+      select: { firstName: true },
+    });
   }
 
   findAll() {
-    return `This action returns all user`;
+    return this.prismaService.user.findMany({
+      select: {
+        id: true,
+        firstName: true,
+        lastName: true,
+        email: true,
+        username: true,
+        role: true,
+      },
+    });
   }
 
-  findOne(id: number) {
-    return `This action returns a #${id} user`;
+  async update(id: string, updateUserDto: UpdateUserDto) {
+    await this.entityValidator.ensureUserExists(id);
+    return this.prismaService.user.update({
+      data: updateUserDto,
+      where: { id },
+    });
   }
 
-  update(id: number, updateUserDto: UpdateUserDto) {
-    return `This action updates a #${id} user`;
-  }
-
-  remove(id: number) {
-    return `This action removes a #${id} user`;
+  async remove(id: string) {
+    await this.entityValidator.ensureUserExists(id);
+    return this.prismaService.user.delete({
+      where: { id },
+    });
   }
 }

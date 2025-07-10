@@ -6,11 +6,14 @@ import {
   Param,
   Patch,
   Post,
+  UseFilters,
 } from '@nestjs/common';
 import { NoteService } from './note.service';
-import { CreateNoteDto } from './dto/create-note.dto';
-import { UpdateNoteDto } from './dto/update-note.dto';
+import { CreateNoteDto } from '././dtos/create-note.dto';
+import { UpdateNoteDto } from '././dtos/update-note.dto';
+import { GlobalExceptionFilter } from '../common/filters/global-exception.filter';
 
+@UseFilters(GlobalExceptionFilter)
 @Controller('note')
 export class NoteController {
   constructor(private readonly noteService: NoteService) {}
@@ -20,23 +23,18 @@ export class NoteController {
     return this.noteService.create(createNoteDto);
   }
 
-  @Get()
-  findAll() {
-    return this.noteService.findAll();
-  }
-
-  @Get(':id')
-  findOne(@Param('id') id: string) {
-    return this.noteService.findOne(+id);
+  @Get(':directoryId')
+  findAll(@Param('directoryId') directoryId: string) {
+    return this.noteService.findAll(directoryId);
   }
 
   @Patch(':id')
   update(@Param('id') id: string, @Body() updateNoteDto: UpdateNoteDto) {
-    return this.noteService.update(+id, updateNoteDto);
+    return this.noteService.update(id, updateNoteDto);
   }
 
   @Delete(':id')
   remove(@Param('id') id: string) {
-    return this.noteService.remove(+id);
+    return this.noteService.remove(id);
   }
 }
