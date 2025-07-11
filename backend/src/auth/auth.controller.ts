@@ -18,7 +18,7 @@ export class AuthController {
     res.cookie('jwt', token, {
       httpOnly: true,
       secure: process.env.COOKIE_SECURE === 'production',
-      sameSite: 'lax',
+      sameSite: 'strict',
       maxAge: 3600000, // 1h
     });
     return { user: user, message: 'Login success' };

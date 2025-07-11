@@ -3,8 +3,7 @@ import { JwtService } from '@nestjs/jwt';
 import * as bcrypt from 'bcrypt';
 import { LoginRequestDto } from './dtos/login-requestDto';
 import { PrismaService } from '../prisma/prisma.service';
-import { Payload } from './interfaces/auth-interfaces';
-import { LoginResponseDto } from './dtos/login-responseDto';
+import { Payload } from '../common/interfaces/auth-interfaces';
 
 @Injectable()
 export class AuthService {
@@ -13,11 +12,7 @@ export class AuthService {
     private prismaService: PrismaService,
   ) {}
 
-  generateToken(user: {
-    id: string;
-    firstName: string;
-    role: string;
-  }) {
+  generateToken(user: { id: string; firstName: string; role: string }) {
     const payload: Payload = {
       sub: user.id,
       role: user.role,

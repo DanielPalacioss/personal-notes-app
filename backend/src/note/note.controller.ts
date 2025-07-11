@@ -16,7 +16,7 @@ import { CreateNoteDto } from './dtos/create-note.dto';
 import { UpdateNoteDto } from './dtos/update-note.dto';
 import { GlobalExceptionFilter } from '../common/filters/global-exception.filter';
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
-import { Request } from 'express';
+import { RequestWithUser } from '../common/interfaces/auth-interfaces';
 
 @UseGuards(JwtAuthGuard)
 @UseFilters(GlobalExceptionFilter)
@@ -25,18 +25,15 @@ export class NoteController {
   constructor(private readonly noteService: NoteService) {}
 
   @Post()
-  create(@Body() createNoteDto: CreateNoteDto, @Req() req: Request) {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-expect-error
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+  create(@Body() createNoteDto: CreateNoteDto, @Req() req: RequestWithUser) {
     return this.noteService.create(createNoteDto, req.user.sub);
   }
 
   @Get(':directoryId')
-  findAll(@Param('directoryId') directoryId: string, @Req() req: Request) {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-expect-error
-    // eslint-disable-next-line @typescript-eslint/no-unsafe-argument
+  findAll(
+    @Param('directoryId') directoryId: string,
+    @Req() req: RequestWithUser,
+  ) {
     return this.noteService.findAll(directoryId, req.user.sub);
   }
 
@@ -45,10 +42,8 @@ export class NoteController {
     @Param('id') id: string,
     @Param('userId') userId: string,
     @Body() updateNoteDto: UpdateNoteDto,
-    @Req() req: Request,
+    @Req() req: RequestWithUser,
   ) {
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-expect-error
     if (req.user.sub !== userId) {
       throw new UnauthorizedException('Not authorized');
     }
@@ -59,16 +54,9 @@ export class NoteController {
   remove(
     @Param('id') id: string,
     @Param('userId') userId: string,
-    @Req() req: Request,
+    @Req() req: RequestWithUser,
   ) {
-    console.log(userId);
-    // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-    // @ts-expect-error
     if (req.user.sub !== userId) {
-      // eslint-disable-next-line @typescript-eslint/ban-ts-comment
-      // @ts-expect-error
-      console.log(req.user.sub);
-      console.log(userId);
       throw new UnauthorizedException('Not authorized');
     }
     return this.noteService.remove(id);
