@@ -5,6 +5,7 @@ import {Button} from "@/components/ui/button"
 import {Input} from "@/components/ui/input"
 import {Label} from "@/components/ui/label"
 import React, {useState} from "react";
+import {useRouter} from "next/navigation";
 
 export function LoginForm({
                               className,
@@ -14,11 +15,24 @@ export function LoginForm({
     const [password, setPassword] = useState("");
     const [error, setError] = useState<string | null>(null);
     const [loading, setLoading] = useState(false);
+    const router = useRouter();
+
+    interface User {
+        id: string;
+        firstName: string;
+        role: "ADMIN" | "USER";
+    }
+
 
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
         setError(null);
         setLoading(true);
+
+        const redirection = {
+            'ADMIN': () => router.push("/admin"),
+            'USER': () => router.push("/directory"),
+        }
 
         try {
             const response = await fetch("http://localhost:4000/api/auth/login", {
@@ -33,9 +47,9 @@ export function LoginForm({
                 throw new Error(errorData.message || "Login failed");
             }
 
-            const data = await response.json();
+            const data: { user: User; message: string } = await response.json();
             console.log("Login exitoso:", data);
-            // redirige o guarda el token si lo necesitas
+            redirection[data.user.role]?.();
 
         } catch (err: any) {
             setError(err.message || "Error desconocido");
