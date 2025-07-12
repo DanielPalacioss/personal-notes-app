@@ -8,7 +8,7 @@ export class LoginRequestDto {
   })
   usernameOrEmail: string;
   @Length(8, 20, {
-    message: 'The username must be between 3 and 15 characters',
+    message: 'The password must be between 8 and 20 characters',
   })
   password: string;
 }

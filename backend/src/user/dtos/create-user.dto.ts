@@ -1,7 +1,5 @@
-import { userRole } from '../enums/user-role.enum';
 import {
   IsEmail,
-  IsEnum,
   IsNotEmpty,
   IsString,
   Length,
@@ -43,7 +41,4 @@ export class CreateUserDto {
     },
   )
   password: string;
-
-  @IsEnum(userRole, { message: 'The rol must be ADMIN OR USER' })
-  role: userRole;
 }

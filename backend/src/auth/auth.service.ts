@@ -42,6 +42,7 @@ export class AuthService {
     if (!isPasswordValid) {
       throw new BadRequestException('Incorrect password');
     }
+    // eslint-disable-next-line @typescript-eslint/no-unused-vars
     const { password: unpassword, ...safeUser } = user;
     return safeUser;
   }

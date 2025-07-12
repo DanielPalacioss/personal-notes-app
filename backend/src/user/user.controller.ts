@@ -7,6 +7,7 @@ import {
   Patch,
   Post,
   Req,
+  UnauthorizedException,
   UseFilters,
   UseGuards,
 } from '@nestjs/common';
@@ -17,6 +18,7 @@ import { GlobalExceptionFilter } from '../common/filters/global-exception.filter
 import { JwtAuthGuard } from '../auth/jwt-auth.guard';
 import { RoleValidatorService } from '../role-validator/role-validator.service';
 import { RequestWithUser } from '../common/interfaces/auth-interfaces';
+import { UpdatePasswordDto } from './dtos/update-password.dto';
 
 @UseFilters(GlobalExceptionFilter)
 @Controller('user')
@@ -25,6 +27,12 @@ export class UserController {
     private readonly userService: UserService,
     private roleValidator: RoleValidatorService,
   ) {}
+
+  @UseGuards(JwtAuthGuard)
+  @Get(':userId')
+  findOne(@Param('userId') userId: string) {
+    return this.userService.findOne(userId);
+  }
 
   @Post()
   create(@Body() createUserDto: CreateUserDto) {
@@ -40,8 +48,31 @@ export class UserController {
 
   @UseGuards(JwtAuthGuard)
   @Patch(':id')
-  update(@Param('id') id: string, @Body() updateUserDto: UpdateUserDto) {
-    return this.userService.update(id, updateUserDto);
+  async update(
+    @Param('id') id: string,
+    @Req() req: RequestWithUser,
+    @Body() updateUserDto: UpdateUserDto,
+  ) {
+    console.error(updateUserDto);
+    if (req.user.role !== 'ADMIN' && req.user.sub !== id) {
+      throw new UnauthorizedException('Not authorized');
+    }
+    await this.userService.update(id, updateUserDto);
+    return { message: 'User updated successfully' };
+  }
+
+  @UseGuards(JwtAuthGuard)
+  @Patch(':id/updatePassword')
+  async updatePassword(
+    @Param('id') id: string,
+    @Req() req: RequestWithUser,
+    @Body() updatePasswordDto: UpdatePasswordDto,
+  ) {
+    if (req.user.sub !== id) {
+      throw new UnauthorizedException('Not authorized');
+    }
+    await this.userService.updatePassword(id, updatePasswordDto);
+    return { message: 'Password updated successfully' };
   }
 
   @UseGuards(JwtAuthGuard)
