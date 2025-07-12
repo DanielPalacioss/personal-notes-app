@@ -1,8 +1,6 @@
-function Page() {
-  return (
-      <div>
-        SSSSSSSSSSS
-      </div>
-  )
+export default function App(){
+
+    return(
+      <div></div>
+    );
 }
-export default Page

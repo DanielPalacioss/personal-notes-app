@@ -6,6 +6,11 @@ import {Input} from "@/components/ui/input"
 import {Label} from "@/components/ui/label"
 import React, {useState} from "react";
 import {useRouter} from "next/navigation";
+import {SignUpModal} from "@/components/signup-modal";
+import axios from "axios";
+import {User} from "@/interfaces/api";
+import {parseAxiosError} from "@/utils/error";
+import {showToast} from "@/components/show-toast";
 
 export function LoginForm({
                               className,
@@ -17,42 +22,42 @@ export function LoginForm({
     const [loading, setLoading] = useState(false);
     const router = useRouter();
 
-    interface User {
-        id: string;
-        firstName: string;
-        role: "ADMIN" | "USER";
-    }
-
-
     const handleSubmit = async (e: React.FormEvent<HTMLFormElement>) => {
         e.preventDefault();
+
         setError(null);
         setLoading(true);
 
         const redirection = {
             'ADMIN': () => router.push("/admin"),
-            'USER': () => router.push("/directory"),
+            'USER': (userId: string) => router.push(`/personal-notes/${userId}/directories`),
         }
 
         try {
-            const response = await fetch("http://localhost:4000/api/auth/login", {
-                method: "POST",
-                headers: {"Content-Type": "application/json"},
-                credentials: "include",
-                body: JSON.stringify({usernameOrEmail, password}),
+            const response = await axios.post(
+                "http://localhost:4000/api/auth/login",
+                {
+                    usernameOrEmail,
+                    password,
+                },
+                {
+                    withCredentials: true,
+                }
+            );
+            const data: { user: User; message: string } = response.data;
+            showToast({
+                title: "Success",
+                description: data.message,
+                type: "success",
             });
+            redirection[data.user.role]?.(data.user.id);
 
-            if (!response.ok) {
-                const errorData = await response.json();
-                throw new Error(errorData.message || "Login failed");
-            }
-
-            const data: { user: User; message: string } = await response.json();
-            console.log("Login exitoso:", data);
-            redirection[data.user.role]?.();
-
-        } catch (err: any) {
-            setError(err.message || "Error desconocido");
+        } catch (err) {
+            showToast({
+                title: "Error",
+                description: parseAxiosError(err),
+                type: "error",
+            });
         } finally {
             setLoading(false);
         }
@@ -85,7 +90,7 @@ export function LoginForm({
 
             <div className="grid gap-3">
                 <div className="flex items-center">
-                <Label htmlFor="password">Password</Label>
+                    <Label htmlFor="password">Password</Label>
                     <a
                         href="#"
                         className="ml-auto text-sm underline-offset-4 hover:underline"
@@ -112,9 +117,7 @@ export function LoginForm({
 
             <div className="text-center text-sm">
                 Don&apos;t have an account?{" "}
-                <a href="#" className="underline underline-offset-4">
-                    Sign up
-                </a>
+                <SignUpModal />
             </div>
         </form>
     );

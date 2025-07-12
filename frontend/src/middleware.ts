@@ -14,14 +14,20 @@ export async function middleware(req: NextRequest) {
 
     const redirection = {
         'ADMIN': () => NextResponse.redirect(new URL('/admin', req.url)),
-        'USER': () => NextResponse.redirect(new URL('/directory', req.url)),
+        'USER': () => NextResponse.redirect(new URL('/personal-notes', req.url)),
     }
 
-    if (!token) return NextResponse.redirect(new URL('/auth/login', req.url));
+    const {pathname} = req.nextUrl;
+
+    if (!token) {
+        if (pathname !== '/auth/login' && pathname !== '/auth/register') {
+            return NextResponse.redirect(new URL('/auth/login', req.url));
+        }
+        return NextResponse.next();
+    }
 
     try {
         const data: { payload: Payload } = await jwtVerify(token, JWT_SECRET);
-        const {pathname} = req.nextUrl;
         if (pathname.startsWith('/admin') && data.payload.role !== 'ADMIN') {
             return NextResponse.redirect(new URL('/unauthorized', req.url));
         } else if (pathname === "/" || pathname === "/auth/login" || pathname === "/auth/register") {
@@ -38,8 +44,6 @@ export async function middleware(req: NextRequest) {
 export const config = {
     matcher: ['/',
         '/auth/:path*',
-        '/directory/:path*',
-        '/user/:path*',
-        '/note/:path*',
-        '/admin/:path*',], // rutas protegidas
+        '/personal-notes/:path*',
+        '/admin/:path*',],
 }
