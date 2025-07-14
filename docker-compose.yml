@@ -39,7 +39,7 @@ services:
       DB_PASSWORD: ${DB_PASSWORD}
       JWT_SECRET: ${JWT_SECRET}
       CORS_ORIGIN_PORT: ${CORS_ORIGIN_PORT}
-      PORT: ${PORT_BACKEND}
+      PORT_BACKEND: ${PORT_BACKEND}
     volumes:
       - ./backend:/app
     networks:
