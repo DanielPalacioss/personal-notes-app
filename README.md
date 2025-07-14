@@ -138,6 +138,8 @@ SQL Server (si no usas contenedor de base de datos)
  Variables de entorno separadas por entorno
 
  Soporte para desarrollo local y en contenedor
+ 
+ Listo para funcionar en produccion con docker
 
 
 # 📄 Licencia
