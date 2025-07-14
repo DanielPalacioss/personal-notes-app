@@ -36,12 +36,18 @@ export default function Directories() {
 
     if (!directories) return <div>Cargando...</div>;
     return (
-        <main className="p-4 w-full">
-            <DirectoryList
-                directories={directories}
-                onSelect={(id) => router.push(`/personal-notes/${params.userId}/directories/${id}`)}
-            />
+        <main className="p-4 w-full space-y-4">
+            {directories.length === 0 ? (
+                <div className="text-muted-foreground text-center">
+                    No hay directorios disponibles.
+                </div>
+            ) : (
+                <DirectoryList
+                    directories={directories}
+                    onSelect={(id) => router.push(`/personal-notes/${params.userId}/directories/${id}`)}
+                />
+            )}
             <AddDirectoryDialog/>
         </main>
-    )
+    );
 }
