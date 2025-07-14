@@ -1,3 +1,7 @@
+# Guia de paso a paso para usar la app
+https://excalidraw.com/#json=rEM5myzzfFSJXYs-mMg4S,Ur0oaU2cA8DrpivPoAmhxg
+
+
 # Advertencia
 ## Si se modifica la variable de entorno DB_PASSWORD o si tiene el puerto 1433 de la base de datos ocupado, cambiar el puerto que se expone la base de datos con el container, y cambiar la contraseña en la url y el container db_init.
 ## Si se va ejecutar la app en local y no en docker eliminar la linea >binaryTargets = ["native", "linux-musl-openssl-3.0.x"]< que se encuentra en el archivo prisma/schema.prisma.
