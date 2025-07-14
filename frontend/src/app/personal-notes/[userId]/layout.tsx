@@ -36,6 +36,13 @@ export default async function Layout({
     } catch (err) {
         console.error(err);
     }
+    if (!user) {
+        return (
+            <div className="p-4">
+                <p>Loading user information...</p>
+            </div>
+        );
+    }
 
     return (
         <SidebarProvider>
@@ -53,7 +60,7 @@ export default async function Layout({
                             <BreadcrumbList>
                                 <BreadcrumbItem>
                                     <BreadcrumbLink>
-                                        {user ? `Welcome back, ${user?.firstName}` : "Loading..."}
+                                        {user ? `Welcome back, ${user.firstName}` : "Loading..."}
                                     </BreadcrumbLink>
                                 </BreadcrumbItem>
                                 <BreadcrumbSeparator className="hidden md:block"/>
