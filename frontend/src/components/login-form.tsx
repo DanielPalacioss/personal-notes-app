@@ -35,7 +35,7 @@ export function LoginForm({
 
         try {
             const response = await axios.post(
-                "http://localhost:4000/api/auth/login",
+                `${process.env.NEXT_PUBLIC_API_URL}/api/auth/login`,
                 {
                     usernameOrEmail,
                     password,
@@ -91,12 +91,12 @@ export function LoginForm({
             <div className="grid gap-3">
                 <div className="flex items-center">
                     <Label htmlFor="password">Password</Label>
-                    <a
+                    {/*<a
                         href="#"
                         className="ml-auto text-sm underline-offset-4 hover:underline"
                     >
                         Forgot your password?
-                    </a>
+                    </a>*/}
                 </div>
                 <Input
                     id="password"
@@ -117,7 +117,7 @@ export function LoginForm({
 
             <div className="text-center text-sm">
                 Don&apos;t have an account?{" "}
-                <SignUpModal />
+                <SignUpModal/>
             </div>
         </form>
     );

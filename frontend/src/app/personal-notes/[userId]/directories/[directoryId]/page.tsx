@@ -1,40 +1,68 @@
-import { NoteListSection } from "@/components/note-list-section"
+'use client'
 
-type Props = {
-    params: {
-        userId: string
-        directoryId: string
-    }
-}
+import {useEffect, useState} from "react";
+import {Note, NoteSection} from "@/interfaces/api";
+import axios from "axios";
+import {showToast} from "@/components/show-toast";
+import {parseAxiosError} from "@/utils/error";
+import {filterNotesByDateRange} from "@/lib/notes";
+import {NoteListSection} from "@/components/note-list-section";
+import {UpdateDirectoryDialog} from "@/components/update-directory-dialog";
+import {AddNoteDialog} from "@/components/add-note-dialog";
+import {useParams} from "next/navigation";
 
-export default function Notes({ params }: Props) {
-    const { userId, directoryId } = params
+export default function NotesPage() {
+    const params = useParams<{ directoryId: string, userId: string }>()
+    const [note, setNote] = useState<Note[]>([]);
+    const [directoryName, setDirectoryName] = useState('');
+    const [noteSection, setNoteSectionList] = useState<NoteSection>();
+
+    useEffect(() => {
+        const fetchData = async () => {
+            try {
+                const responseNameDirectory = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/directory/${params.directoryId}`,
+                    {withCredentials: true},);
+                const {directoryName} = responseNameDirectory.data;
+                setDirectoryName(directoryName);
+                const response = await axios.get(`${process.env.NEXT_PUBLIC_API_URL}/api/note/${params.directoryId}`, {
+                    withCredentials: true,
+                });
+                setNote(response.data);
+            } catch (err) {
+                showToast({
+                    title: "Error",
+                    description: parseAxiosError(err),
+                    type: "error",
+                });
+            }
+        }
+        fetchData();
+    }, [params.directoryId]);
+
+    useEffect(() => {
+        if (note.length === 0) return;
+        setNoteSectionList(filterNotesByDateRange(note, params.userId, params.directoryId));
+    }, [note, params]);
+
 
     return (
-        <main className="p-4 w-full">
-            <NoteListSection
-                sectionTitle="Últimos 7 días"
-                items={[
-                    {
-                        title: "Nota importante",
-                        date: "12/03/2024",
-                        subtitle: "Este es un resumen de la nota que se cortará si es muy largo",
-                        href: `/personal-notes/${userId}/directories/${directoryId}/note/1`,
-                    },
-                    {
-                        title: "Reunión de equipo",
-                        date: "Miércoles",
-                        subtitle: "Resumen de reunión con muchos temas a tratar...",
-                        href: `/personal-notes/${userId}/directories/${directoryId}/note/2`,
-                    },
-                    {
-                        title: "Recordatorio",
-                        date: "10:48",
-                        subtitle: "Cita médica con el Dr. Ramírez sobre análisis...",
-                        href: `/personal-notes/${userId}/directories/${directoryId}/note/3`,
-                    },
-                ]}
-            />
+        <main className="w-full p-4 overflow-x-hidden">
+            {directoryName && (
+                <div className="border-b pb-2 mb-4">
+                    <h1 className="text-2xl font-semibold">{directoryName}</h1>
+                </div>
+            )}
+
+            {!noteSection && (
+                <p className="text-muted-foreground">Directory is empty</p>
+            )}
+
+            {noteSection && (
+                <NoteListSection noteSection={noteSection}/>
+            )}
+
+            <UpdateDirectoryDialog directoryId={params.directoryId} directoryN={directoryName}/>
+            <AddNoteDialog directoryId={params.directoryId}/>
         </main>
     )
 }

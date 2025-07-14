@@ -25,8 +25,24 @@ export class NoteController {
   constructor(private readonly noteService: NoteService) {}
 
   @Post()
-  create(@Body() createNoteDto: CreateNoteDto, @Req() req: RequestWithUser) {
-    return this.noteService.create(createNoteDto, req.user.sub);
+  async create(
+    @Body() createNoteDto: CreateNoteDto,
+    @Req() req: RequestWithUser,
+  ) {
+    const { title } = await this.noteService.create(
+      createNoteDto,
+      req.user.sub,
+    );
+    return { message: `Note ${title} created successfully` };
+  }
+
+  @Get(':directoryId/:id')
+  findById(
+    @Param('directoryId') directoryId: string,
+    @Param('id') id: string,
+    @Req() req: RequestWithUser,
+  ) {
+    return this.noteService.findById(directoryId, id, req.user.sub);
   }
 
   @Get(':directoryId')
@@ -38,7 +54,7 @@ export class NoteController {
   }
 
   @Patch(':id/:userId')
-  update(
+  async update(
     @Param('id') id: string,
     @Param('userId') userId: string,
     @Body() updateNoteDto: UpdateNoteDto,
@@ -47,11 +63,12 @@ export class NoteController {
     if (req.user.sub !== userId) {
       throw new UnauthorizedException('Not authorized');
     }
-    return this.noteService.update(id, updateNoteDto);
+    const { title } = await this.noteService.update(id, updateNoteDto);
+    return { message: `Note ${title} updated successfully` };
   }
 
   @Delete(':id/:userId')
-  remove(
+  async remove(
     @Param('id') id: string,
     @Param('userId') userId: string,
     @Req() req: RequestWithUser,
@@ -59,6 +76,7 @@ export class NoteController {
     if (req.user.sub !== userId) {
       throw new UnauthorizedException('Not authorized');
     }
-    return this.noteService.remove(id);
+    const { title } = await this.noteService.remove(id);
+    return { message: `Note ${title} deleted successfully` };
   }
 }

@@ -10,7 +10,7 @@ async function bootstrap() {
   app.useGlobalFilters(new GlobalExceptionFilter());
   app.setGlobalPrefix('api');
   app.enableCors({
-    origin: ['http://localhost:3000'],
+    origin: [`${process.env.CORS_ORIGIN_PORT}`],
     methods: 'GET,PATCH,POST,DELETE',
     credentials: true,
   });
@@ -24,7 +24,7 @@ async function bootstrap() {
       transform: true, // transforma payloads a instancias de clase
     }),
   );
-  await app.listen(process.env.PORT ?? 4000);
+  await app.listen(process.env.PORT_BACKEND ?? 4000);
 }
 
 bootstrap();

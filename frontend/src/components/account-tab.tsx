@@ -8,8 +8,9 @@ import axios from "axios";
 import {parseAxiosError} from "@/utils/error";
 import {useState} from "react";
 import {showToast} from "@/components/show-toast";
+import {CustomAlertDialog} from "@/components/custom-alert-dialog";
 
-export function AccountTab( {user}: { user: User}){
+export function AccountTab({user}: { user: User }) {
     const [firstName, setFirstName] = useState(user.firstName);
     const [lastName, setLastName] = useState(user.lastName);
     const [email, setEmail] = useState(user.email);
@@ -17,22 +18,21 @@ export function AccountTab( {user}: { user: User}){
     const [newPassword, setNewPassword] = useState('');
 
     const handleAccount = async () => {
-        if(!firstName || !lastName ||  !email )
-        {
+        if (!firstName || !lastName || !email) {
             showToast({
                 title: "Warning",
                 description: "All fields are required",
                 type: "warning",
             });
             return;
-        } else if(firstName.length < 1 && firstName.length > 31){
+        } else if (firstName.length < 1 && firstName.length > 31) {
             showToast({
                 title: "Warning",
                 description: "First Name must be between 3 and 30 characters",
                 type: "warning",
             });
             return;
-        } else if(lastName.length < 1 && lastName.length > 30){
+        } else if (lastName.length < 1 && lastName.length > 30) {
             showToast({
                 title: "Warning",
                 description: "Last name must be between 3 and 30 characters",
@@ -42,11 +42,11 @@ export function AccountTab( {user}: { user: User}){
         }
         try {
             const response = await axios.patch(
-                `http://localhost:4000/api/user/${user.id}`,
+                `${process.env.NEXT_PUBLIC_API_URL}/api/user/${user.id}`,
                 {
                     firstName, lastName, email
                 },
-                { withCredentials: true }
+                {withCredentials: true}
             );
             showToast({
                 title: "Success",
@@ -65,16 +65,14 @@ export function AccountTab( {user}: { user: User}){
     const handleChangePassword = async () => {
         const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/;
 
-        if(!password || !newPassword)
-        {
+        if (!password || !newPassword) {
             showToast({
                 title: "Warning",
                 description: "All fields are required",
                 type: "warning",
             });
             return;
-        } else if(!passwordRegex.test(password) || !passwordRegex.test(newPassword))
-        {
+        } else if (!passwordRegex.test(password) || !passwordRegex.test(newPassword)) {
             showToast({
                 title: "Warning",
                 description: "Password and new password must be 8-20 characters and include at least one uppercase letter, one lowercase letter, one number, and one special character",
@@ -85,7 +83,7 @@ export function AccountTab( {user}: { user: User}){
 
         try {
             const response = await axios.patch(
-                `http://localhost:4000/api/user/${user.id}/updatePassword`,
+                `${process.env.NEXT_PUBLIC_API_URL}/api/user/${user.id}/updatePassword`,
                 {
                     password,
                     newPassword,
@@ -127,19 +125,32 @@ export function AccountTab( {user}: { user: User}){
                         <CardContent className="grid gap-6">
                             <div className="grid gap-3">
                                 <Label htmlFor="tabs-demo-name">First Name</Label>
-                                <Input id="tabs-demo-name" value={firstName} onChange={(e) => {setFirstName(e.target.value)}}/>
+                                <Input id="tabs-demo-name" value={firstName} onChange={(e) => {
+                                    setFirstName(e.target.value)
+                                }}/>
                             </div>
                             <div className="grid gap-3">
                                 <Label htmlFor="tabs-demo-name">Last Name</Label>
-                                <Input id="tabs-demo-name" value={lastName} onChange={(e) => {setLastName(e.target.value)}}/>
+                                <Input id="tabs-demo-name" value={lastName} onChange={(e) => {
+                                    setLastName(e.target.value)
+                                }}/>
                             </div>
                             <div className="grid gap-3">
                                 <Label htmlFor="tabs-demo-username">Email</Label>
-                                <Input type={"email"} id="tabs-demo-username" value={email} onChange={(e) => {setEmail(e.target.value)}}/>
+                                <Input type={"email"} id="tabs-demo-username" value={email} onChange={(e) => {
+                                    setEmail(e.target.value)
+                                }}/>
                             </div>
                         </CardContent>
                         <CardFooter>
-                            <Button onClick={handleAccount}>Save changes</Button>
+                            <CustomAlertDialog
+                                trigger={<Button>Save changes</Button>}
+                                title="Are you absolutely sure?"
+                                description="This action modify your account."
+                                actionText="Yes"
+                                cancelText="Cancel"
+                                onConfirm={handleAccount}
+                            />
                         </CardFooter>
                     </Card>
                 </TabsContent>
@@ -148,22 +159,32 @@ export function AccountTab( {user}: { user: User}){
                         <CardHeader>
                             <CardTitle>Password</CardTitle>
                             <CardDescription>
-                                Change your password here. After saving, you&apos;ll be logged
-                                out.
+                                Change your password here.
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="grid gap-6">
                             <div className="grid gap-3">
                                 <Label htmlFor="tabs-demo-current">Current password</Label>
-                                <Input id="tabs-demo-current" type="password" value={password} onChange={(e) => {setPassword(e.target.value)}}/>
+                                <Input id="tabs-demo-current" type="password" value={password} onChange={(e) => {
+                                    setPassword(e.target.value)
+                                }}/>
                             </div>
                             <div className="grid gap-3">
                                 <Label htmlFor="tabs-demo-new">New password</Label>
-                                <Input id="tabs-demo-new" type="password" value={newPassword} onChange={(e) => {setNewPassword(e.target.value)}}/>
+                                <Input id="tabs-demo-new" type="password" value={newPassword} onChange={(e) => {
+                                    setNewPassword(e.target.value)
+                                }}/>
                             </div>
                         </CardContent>
                         <CardFooter>
-                            <Button onClick={handleChangePassword}>Save password</Button>
+                            <CustomAlertDialog
+                                trigger={<Button>Save password</Button>}
+                                title="Are you absolutely sure?"
+                                description="This action modify your password."
+                                actionText="Yes"
+                                cancelText="Cancel"
+                                onConfirm={handleChangePassword}
+                            />
                         </CardFooter>
                     </Card>
                 </TabsContent>

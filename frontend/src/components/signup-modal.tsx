@@ -55,7 +55,7 @@ export function SignUpModal() {
         }
 
         try {
-            const response = await axios.post("http://localhost:4000/api/user", {
+            const response = await axios.post(`${process.env.NEXT_PUBLIC_API_URL}/api/user`, {
                 firstName,
                 lastName,
                 username,

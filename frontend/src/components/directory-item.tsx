@@ -1,5 +1,5 @@
-import { cn } from "@/lib/utils"
-import { Folder, ChevronRight } from "lucide-react"
+import {cn} from "@/lib/utils"
+import {ChevronRight, Folder} from "lucide-react"
 
 type Props = {
     title: string
@@ -7,19 +7,19 @@ type Props = {
     className?: string
 }
 
-export function DirectoryItem({ title, onClick }: Props) {
+export function DirectoryItem({title, onClick}: Props) {
     return (
         <div
             onClick={onClick}
             className={cn(
-                "w-full flex items-center justify-between p-4 hover:bg-muted rounded-md cursor-pointer transition",
+                "w-full flex items-center justify-between p-4 hover:bg-muted rounded-md cursor-pointer transition border-b-2 border-border",
             )}
         >
             <div className="flex items-center gap-2">
-                <Folder className="h-5 w-5 text-primary" />
+                <Folder className="h-5 w-5 text-primary"/>
                 <h2 className="text-xl font-bold truncate">{title}</h2>
             </div>
-            <ChevronRight className="h-5 w-5 text-muted-foreground" />
+            <ChevronRight className="h-5 w-5 text-muted-foreground"/>
         </div>
     )
 }

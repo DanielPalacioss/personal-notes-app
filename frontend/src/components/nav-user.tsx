@@ -4,13 +4,13 @@ import {BadgeCheck, Bell, ChevronsUpDown, LogOut,} from "lucide-react"
 
 import {Avatar, AvatarFallback,} from "@/components/ui/avatar"
 import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuGroup,
-  DropdownMenuItem,
-  DropdownMenuLabel,
-  DropdownMenuSeparator,
-  DropdownMenuTrigger,
+    DropdownMenu,
+    DropdownMenuContent,
+    DropdownMenuGroup,
+    DropdownMenuItem,
+    DropdownMenuLabel,
+    DropdownMenuSeparator,
+    DropdownMenuTrigger,
 } from "@/components/ui/dropdown-menu"
 import {SidebarMenu, SidebarMenuButton, SidebarMenuItem, useSidebar,} from "@/components/ui/sidebar"
 import {User} from "@/interfaces/api";
@@ -29,7 +29,7 @@ export function NavUser({user}: { user: User }) {
     const logout = async () => {
         try {
             const response = await axios.post(
-                "http://localhost:4000/api/auth/logout",
+                `${process.env.NEXT_PUBLIC_API_URL}/api/auth/logout`,
                 {},
                 {
                     withCredentials: true

@@ -24,11 +24,15 @@ export class DirectoryController {
   constructor(private readonly directoryService: DirectoryService) {}
 
   @Post()
-  create(
+  async create(
     @Body() createDirectoryDto: CreateDirectoryDto,
     @Req() req: RequestWithUser,
   ) {
-    return this.directoryService.create(createDirectoryDto, req.user.sub);
+    const { directoryName } = await this.directoryService.create(
+      createDirectoryDto,
+      req.user.sub,
+    );
+    return { message: `Directory ${directoryName} created successfully` };
   }
 
   @Get()
@@ -36,17 +40,31 @@ export class DirectoryController {
     return this.directoryService.findAll(req.user.sub);
   }
 
+  @Get(':id')
+  findById(@Req() req: RequestWithUser, @Param('id') id: string) {
+    return this.directoryService.findById(id, req.user.sub);
+  }
+
   @Patch(':id')
-  update(
+  async update(
     @Param('id') id: string,
     @Body() updateDirectoryDto: UpdateDirectoryDto,
     @Req() req: RequestWithUser,
   ) {
-    return this.directoryService.update(id, updateDirectoryDto, req.user.sub);
+    const { directoryName } = await this.directoryService.update(
+      id,
+      updateDirectoryDto,
+      req.user.sub,
+    );
+    return { message: `Directory ${directoryName} updated successfully` };
   }
 
   @Delete(':id')
-  remove(@Param('id') id: string, @Req() req: RequestWithUser) {
-    return this.directoryService.remove(id, req.user.sub);
+  async remove(@Param('id') id: string, @Req() req: RequestWithUser) {
+    const { directoryName } = await this.directoryService.remove(
+      id,
+      req.user.sub,
+    );
+    return { message: `Directory ${directoryName} deleted successfully` };
   }
 }

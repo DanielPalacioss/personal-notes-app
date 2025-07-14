@@ -12,3 +12,26 @@ export interface User {
     email?: string;
     role: "ADMIN" | "USER";
 }
+
+export interface Directory {
+    id: string;
+    directoryName: string;
+    updateAt: Date;
+}
+
+export interface Note {
+    id: string;
+    title: string;
+    content: string;
+    updatedAt: string;
+    href?: string;
+}
+
+export interface NoteRequestUpdate {
+    title: string;
+    content: string;
+}
+
+export interface NoteSection {
+    [date: string]: Note[];
+}

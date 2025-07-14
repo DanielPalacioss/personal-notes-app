@@ -1,0 +1,69 @@
+services:
+  sql-server:
+    image: mcr.microsoft.com/mssql/server:2022-latest
+    container_name: sqlserver
+    ports:
+      - "1433:1433"
+    environment:
+      ACCEPT_EULA: "Y"
+      MSSQL_SA_PASSWORD: ${DB_PASSWORD}
+    volumes:
+      - personal_notes_data:/var/opt/mssql
+    networks:
+      - personal_notes_network
+
+  db-init:
+    image: mcr.microsoft.com/mssql-tools
+    depends_on:
+      - sql-server
+    networks:
+      - personal_notes_network
+    entrypoint: >
+      /bin/bash -c "
+        sleep 40 &&
+        /opt/mssql-tools/bin/sqlcmd -S sql-server -U sa -P ${DB_PASSWORD} -Q \"IF DB_ID('personal_notes_db') IS NULL CREATE DATABASE [personal_notes_db]\"
+      "
+
+  backend:
+    container_name: personal-notes-backend
+    build:
+      context: ./backend
+      dockerfile: Dockerfile
+    depends_on:
+      - sql-server
+      - db-init
+    ports:
+      - ${PORT_BACKEND}:${PORT_BACKEND}
+    environment:
+      DATABASE_URL: ${DATABASE_URL}
+      DB_PASSWORD: ${DB_PASSWORD}
+      JWT_SECRET: ${JWT_SECRET}
+      CORS_ORIGIN_PORT: ${CORS_ORIGIN_PORT}
+      PORT: ${PORT_BACKEND}
+    volumes:
+      - ./backend:/app
+    networks:
+      - personal_notes_network
+
+  frontend:
+    container_name: personal-notes-frontend
+    build:
+      context: ./frontend
+      dockerfile: Dockerfile
+    depends_on:
+      - backend
+    ports:
+      - ${PORT_FRONTEND}:${PORT_FRONTEND}
+    environment:
+      JWT_SECRET: ${JWT_SECRET}
+      NEXT_PUBLIC_API_URL: http://localhost:${PORT_BACKEND}
+    volumes:
+      - ./frontend:/app
+    networks:
+      - personal_notes_network
+
+volumes:
+  personal_notes_data:
+
+networks:
+  personal_notes_network:

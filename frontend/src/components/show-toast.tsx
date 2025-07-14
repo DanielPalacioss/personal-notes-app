@@ -1,4 +1,4 @@
-import { toast } from "sonner";
+import {toast} from "sonner";
 
 type ToastType = "success" | "error" | "warning" | "info" | "default";
 
@@ -28,14 +28,14 @@ export function showToast({
             : undefined;
 
     if (type === "success") {
-        toast.success(title, { description, duration, action });
+        toast.success(title, {description, duration, action});
     } else if (type === "error") {
-        toast.error(title, { description, duration, action });
+        toast.error(title, {description, duration, action});
     } else if (type === "warning") {
-        toast.warning(title, { description, duration, action });
+        toast.warning(title, {description, duration, action});
     } else if (type === "info") {
-        toast.info(title, { description, duration, action });
+        toast.info(title, {description, duration, action});
     } else {
-        toast(title, { description, duration, action });
+        toast(title, {description, duration, action});
     }
 }

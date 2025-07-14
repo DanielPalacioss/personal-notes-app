@@ -1,16 +1,9 @@
 'use client'
 
-import { cn } from "@/lib/utils"
-import { useRouter } from "next/navigation";
+import {useRouter} from "next/navigation";
+import {Note, NoteSection} from "@/interfaces/api";
 
-type ListItemProps = {
-    title: string
-    date: string
-    subtitle: string
-    href?: string
-}
-
-export function ListItem({ title, date, subtitle, href }: ListItemProps) {
+export function ListItem({title, updatedAt, content, href}: Note) {
     const router = useRouter()
 
     const handleClick = () => {
@@ -24,27 +17,26 @@ export function ListItem({ title, date, subtitle, href }: ListItemProps) {
         >
             <span className="font-bold text-base">{title}</span>
             <div className="flex items-center text-sm text-muted-foreground gap-2">
-                <span className="whitespace-nowrap">{date}</span>
-                <span className="truncate flex-1">{subtitle}</span>
+                <span className="whitespace-nowrap">{updatedAt}</span>
+                <span className="truncate flex-1">{content?.length > 30 ? content.slice(0, 30) : content}</span>
             </div>
         </div>
     )
 }
 
-type ListSectionProps = {
-    sectionTitle: string
-    items: ListItemProps[]
-}
-
-export function NoteListSection({ sectionTitle, items }: ListSectionProps) {
+export function NoteListSection({noteSection}: { noteSection: NoteSection }) {
     return (
-        <div className={cn("w-full")}>
-            <h2 className="text-xl font-bold mb-2">{sectionTitle}</h2>
-            <div className="border rounded-lg divide-y">
-                {items.map((item, idx) => (
-                    <ListItem key={idx} {...item} />
-                ))}
-            </div>
+        <div className="w-full space-y-4 pt-2">
+            {Object.entries(noteSection).map(([sectionTitle, notes]) => (
+                <div key={sectionTitle}>
+                    <h2 className="text-xl font-bold mb-2">{sectionTitle}</h2>
+                    <div className="border rounded-lg divide-y">
+                        {notes.map((item, idx) => (
+                            <ListItem key={idx} {...item} />
+                        ))}
+                    </div>
+                </div>
+            ))}
         </div>
     )
 }

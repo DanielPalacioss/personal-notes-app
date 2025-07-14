@@ -18,7 +18,20 @@ export class NoteService {
     );
     return this.prismaService.note.create({
       data: createNoteDto,
-      select: { id: true, title: true, content: true, createdAt: true },
+      select: { title: true },
+    });
+  }
+
+  async findById(directoryId: string, id: string, userId: string) {
+    await this.entityValidator.ensureDirectoryExists(directoryId, userId);
+    return this.prismaService.note.findUnique({
+      select: {
+        id: true,
+        title: true,
+        content: true,
+        updatedAt: true,
+      },
+      where: { directoryId, id },
     });
   }
 
@@ -30,9 +43,9 @@ export class NoteService {
         title: true,
         content: true,
         updatedAt: true,
-        createdAt: true,
       },
       where: { directoryId },
+      orderBy: { updatedAt: 'desc' },
     });
   }
 
@@ -41,6 +54,7 @@ export class NoteService {
     return this.prismaService.note.update({
       where: { id },
       data: updateNoteDto,
+      select: { title: true },
     });
   }
 
@@ -48,6 +62,7 @@ export class NoteService {
     await this.entityValidator.ensureNoteExists(id);
     return this.prismaService.note.delete({
       where: { id },
+      select: { title: true },
     });
   }
 }

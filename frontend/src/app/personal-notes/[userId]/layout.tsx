@@ -12,6 +12,7 @@ import {
 import {cookies} from "next/headers";
 import React from "react";
 import {showToast} from "@/components/show-toast";
+import {BackButton} from "@/components/back-button";
 
 export default async function Layout({
                                          children,
@@ -26,7 +27,7 @@ export default async function Layout({
 
     let user = null;
     try {
-        const response = await fetch(`http://localhost:4000/api/user/${(params.userId)}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/${(params.userId)}`, {
             headers: {
                 Cookie: `jwt=${jwt}`,
             },
@@ -34,6 +35,7 @@ export default async function Layout({
         });
         user = await response.json();
     } catch (err) {
+        console.error(err);
         showToast({
             title: "Error",
             description: "Error fetching user:",
@@ -62,12 +64,13 @@ export default async function Layout({
                                 </BreadcrumbItem>
                                 <BreadcrumbSeparator className="hidden md:block"/>
                                 <BreadcrumbItem>
-                                    <BreadcrumbPage>Directory/Notes</BreadcrumbPage>
+                                    <BreadcrumbPage>{'Personal Notes'}</BreadcrumbPage>
                                 </BreadcrumbItem>
                             </BreadcrumbList>
                         </Breadcrumb>
                     </div>
                 </header>
+                <BackButton/>
                 <div className="flex flex-1 flex-col gap-4 p-4 pt-0">{children}</div>
             </SidebarInset>
         </SidebarProvider>

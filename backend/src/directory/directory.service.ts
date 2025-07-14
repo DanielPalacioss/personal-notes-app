@@ -15,7 +15,7 @@ export class DirectoryService {
     await this.entityValidator.ensureUserExists(userId);
     return this.prismaService.directory.create({
       data: { ...createDirectoryDto, userId },
-      select: { id: true, directoryName: true, createdAt: true },
+      select: { directoryName: true },
     });
   }
 
@@ -24,11 +24,17 @@ export class DirectoryService {
       select: {
         id: true,
         directoryName: true,
-        createdAt: true,
         updatedAt: true,
-        notes: true,
       },
       where: { userId },
+      orderBy: { updatedAt: 'desc' },
+    });
+  }
+
+  findById(id: string, userId: string) {
+    return this.prismaService.directory.findUnique({
+      select: { directoryName: true },
+      where: { id, userId },
     });
   }
 

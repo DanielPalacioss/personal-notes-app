@@ -1,6 +1,6 @@
-import { Dialog, DialogContent, DialogHeader, DialogTitle } from "@/components/ui/dialog";
-import { AccountTab } from "./account-tab";
-import { User } from "@/interfaces/api";
+import {Dialog, DialogContent, DialogHeader, DialogTitle} from "@/components/ui/dialog";
+import {AccountTab} from "./account-tab";
+import {User} from "@/interfaces/api";
 
 interface AccountDialogProps {
     open: boolean;
@@ -8,14 +8,14 @@ interface AccountDialogProps {
     user: User;
 }
 
-export function AccountDialog({ open, onOpenChange, user }: AccountDialogProps) {
+export function AccountDialog({open, onOpenChange, user}: AccountDialogProps) {
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>Manage Account</DialogTitle>
                 </DialogHeader>
-                <AccountTab user={user} />
+                <AccountTab user={user}/>
             </DialogContent>
         </Dialog>
     );
