@@ -6,10 +6,16 @@ import { PrismaService } from './prisma/prisma.service';
 import { EntityValidatorService } from './entity-validator/entity-validator.service';
 import { AuthModule } from './auth/auth.module';
 import { RoleValidatorService } from './role-validator/role-validator.service';
+import { UserService } from './user/user.service';
 
 @Module({
   imports: [NoteModule, UserModule, DirectoryModule, AuthModule],
   controllers: [],
-  providers: [PrismaService, EntityValidatorService, RoleValidatorService],
+  providers: [
+    PrismaService,
+    EntityValidatorService,
+    RoleValidatorService,
+    UserService,
+  ],
 })
 export class AppModule {}

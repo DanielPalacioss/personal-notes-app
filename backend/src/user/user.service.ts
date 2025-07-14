@@ -37,14 +37,24 @@ export class UserService {
     return user;
   }
 
-  async create(createUserDto: CreateUserDto) {
+  async findByUsername(username: string) {
+    return this.prismaService.user.findUnique({
+      where: { username },
+      select: {
+        id: true,
+      },
+    });
+  }
+
+  async create(createUserDto: CreateUserDto, isAdmin?: boolean) {
     const hashedPassword = await bcrypt.hash(createUserDto.password, 10);
+    const role = isAdmin ? UserRole.ADMIN : UserRole.USER;
     try {
       return await this.prismaService.user.create({
         data: {
           ...createUserDto,
           password: hashedPassword,
-          role: UserRole.USER,
+          role,
         },
         select: { firstName: true },
       });

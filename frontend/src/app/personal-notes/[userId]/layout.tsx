@@ -11,7 +11,6 @@ import {
 
 import {cookies} from "next/headers";
 import React from "react";
-import {showToast} from "@/components/show-toast";
 import {BackButton} from "@/components/back-button";
 
 export default async function Layout({
@@ -19,15 +18,15 @@ export default async function Layout({
                                          params,
                                      }: {
     children: React.ReactNode;
-    params: { userId: string };
+    params: Promise<{ userId: string }>;
 }) {
 
     const cookieStore = await cookies();
     const jwt = cookieStore.get("jwt")?.value;
-
+    const {userId} = await params;
     let user = null;
     try {
-        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/${(params.userId)}`, {
+        const response = await fetch(`${process.env.NEXT_PUBLIC_API_URL}/api/user/${(userId)}`, {
             headers: {
                 Cookie: `jwt=${jwt}`,
             },
@@ -36,11 +35,6 @@ export default async function Layout({
         user = await response.json();
     } catch (err) {
         console.error(err);
-        showToast({
-            title: "Error",
-            description: "Error fetching user:",
-            type: "error",
-        });
     }
 
     return (
@@ -59,7 +53,7 @@ export default async function Layout({
                             <BreadcrumbList>
                                 <BreadcrumbItem>
                                     <BreadcrumbLink>
-                                        {user ? `Welcome back, ${user.firstName}` : "Loading..."}
+                                        {user ? `Welcome back, ${user?.firstName}` : "Loading..."}
                                     </BreadcrumbLink>
                                 </BreadcrumbItem>
                                 <BreadcrumbSeparator className="hidden md:block"/>
