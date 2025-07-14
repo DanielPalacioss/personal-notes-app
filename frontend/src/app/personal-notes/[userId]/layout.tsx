@@ -11,5 +11,5 @@ export default async function Layout({
 }) {
     const cookieStore = await cookies();
     const jwt = await cookieStore.get("jwt")?.value;
-    return <ClientLayout jwt={jwt || ''} userId = {params.userId}>{children}</ClientLayout>;
+    return <ClientLayout jwt={jwt || ''} userId={params.userId}>{children}</ClientLayout>;
 }

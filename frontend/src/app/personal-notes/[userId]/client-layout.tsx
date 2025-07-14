@@ -44,10 +44,11 @@ export function ClientLayout({userId, jwt, children}: { userId: string, jwt: str
         fetchUser();
     }, [userId, jwt]);
 
+
     if (!user) return <div>Loading user...</div>;
     return (
         <SidebarProvider>
-            <AppSidebar user={user}/>
+            <AppSidebar user={user} isAdmin={user.role === "ADMIN"}/>
             <SidebarInset>
                 <header
                     className="flex h-16 shrink-0 items-center gap-2 transition-[width,height] ease-linear group-has-data-[collapsible=icon]/sidebar-wrapper:h-12">

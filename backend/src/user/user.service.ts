@@ -31,6 +31,7 @@ export class UserService {
         firstName: true,
         lastName: true,
         email: true,
+        role: true,
       },
     });
     if (!user) throw new NotFoundException(`User with id ${userId} not found`);
@@ -99,6 +100,7 @@ export class UserService {
 
   async updatePassword(
     id: string,
+    isAdmin: boolean,
     { newPassword, password }: UpdatePasswordDto,
   ) {
     const user = await this.prismaService.user.findFirst({
@@ -112,7 +114,7 @@ export class UserService {
     }
     const isPasswordValid = await bcrypt.compare(password, user.password);
 
-    if (!isPasswordValid) {
+    if (!isPasswordValid && !isAdmin) {
       throw new BadRequestException('Incorrect current password');
     }
     const encryptPassword = await bcrypt.hash(newPassword, 10);

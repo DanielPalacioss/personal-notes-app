@@ -70,7 +70,8 @@ export class UserController {
     if (req.user.sub !== id) {
       throw new UnauthorizedException('Not authorized');
     }
-    await this.userService.updatePassword(id, updatePasswordDto);
+    const isAdmin = req.user.role === 'ADMIN';
+    await this.userService.updatePassword(id, isAdmin, updatePasswordDto);
     return { message: 'Password updated successfully' };
   }
 

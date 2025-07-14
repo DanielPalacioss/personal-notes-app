@@ -4,7 +4,7 @@ import {Button} from "@/components/ui/button";
 import {useRouter} from "next/navigation";
 import {ArrowLeft} from "lucide-react";
 
-export function BackButton(){
+export function BackButton() {
     const router = useRouter()
     return (
         <div>

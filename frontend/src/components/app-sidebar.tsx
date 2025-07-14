@@ -12,17 +12,24 @@ const data = {
     navMain: [
         {
             title: "Directories",
-            url: "/",
+            url: "directories",
             icon: BookOpen,
+            admin: false
+        },
+        {
+            title: "Admin",
+            url: "admin",
+            icon: BookOpen,
+            admin: true
         },
     ],
 }
 
-export function AppSidebar({user}: { user: User }) {
+export function AppSidebar({user, isAdmin}: { user: User, isAdmin: boolean }) {
     return (
         <Sidebar collapsible="icon">
             <SidebarContent>
-                <NavMain items={data.navMain}/>
+                <NavMain items={data.navMain} isAdmin={isAdmin}/>
             </SidebarContent>
             <SidebarFooter>
                 <NavUser user={user}/>

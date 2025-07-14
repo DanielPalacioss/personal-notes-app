@@ -12,7 +12,7 @@ export default function Directories() {
 
     const router = useRouter();
     const [directories, setDirectories] = useState<Directory[]>([])
-    const params = useParams<{ userId: string}>()
+    const params = useParams<{ userId: string }>()
 
     useEffect(() => {
         const fetchData = async () => {

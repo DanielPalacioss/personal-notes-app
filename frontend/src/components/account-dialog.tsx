@@ -6,16 +6,17 @@ interface AccountDialogProps {
     open: boolean;
     onOpenChange: (open: boolean) => void;
     user: User;
+    isAdmin?: boolean
 }
 
-export function AccountDialog({open, onOpenChange, user}: AccountDialogProps) {
+export function AccountDialog({open, onOpenChange, user, isAdmin}: AccountDialogProps) {
     return (
         <Dialog open={open} onOpenChange={onOpenChange}>
             <DialogContent>
                 <DialogHeader>
                     <DialogTitle>Manage Account</DialogTitle>
                 </DialogHeader>
-                <AccountTab user={user}/>
+                <AccountTab user={user} isAdmin={isAdmin || false}/>
             </DialogContent>
         </Dialog>
     );

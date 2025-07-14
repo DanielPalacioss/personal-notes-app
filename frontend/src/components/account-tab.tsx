@@ -10,7 +10,7 @@ import {useState} from "react";
 import {showToast} from "@/components/show-toast";
 import {CustomAlertDialog} from "@/components/custom-alert-dialog";
 
-export function AccountTab({user}: { user: User }) {
+export function AccountTab({user, isAdmin}: { user: User, isAdmin: boolean }) {
     const [firstName, setFirstName] = useState(user.firstName);
     const [lastName, setLastName] = useState(user.lastName);
     const [email, setEmail] = useState(user.email);
@@ -64,21 +64,33 @@ export function AccountTab({user}: { user: User }) {
 
     const handleChangePassword = async () => {
         const passwordRegex = /^(?=.*[a-z])(?=.*[A-Z])(?=.*\d)(?=.*[@$!%*?&])[A-Za-z\d@$!%*?&]{8,20}$/;
-
-        if (!password || !newPassword) {
-            showToast({
-                title: "Warning",
-                description: "All fields are required",
-                type: "warning",
-            });
-            return;
-        } else if (!passwordRegex.test(password) || !passwordRegex.test(newPassword)) {
-            showToast({
-                title: "Warning",
-                description: "Password and new password must be 8-20 characters and include at least one uppercase letter, one lowercase letter, one number, and one special character",
-                type: "warning",
-            });
-            return;
+        if (!isAdmin) {
+            if (!password || !newPassword) {
+                showToast({
+                    title: "Warning",
+                    description: "All fields are required",
+                    type: "warning",
+                });
+                return;
+            } else if (!passwordRegex.test(password) || !passwordRegex.test(newPassword)) {
+                showToast({
+                    title: "Warning",
+                    description: "Password and new password must be 8-20 characters and include at least one uppercase letter, one lowercase letter, one number, and one special character",
+                    type: "warning",
+                });
+                return;
+            }
+        } else {
+            if (!passwordRegex.test(newPassword)) {
+                showToast({
+                    title: "Warning",
+                    description: "Password and new password must be 8-20 characters and include at least one uppercase letter, one lowercase letter, one number, and one special character",
+                    type: "warning",
+                });
+                return;
+            } else {
+                setPassword(newPassword);
+            }
         }
 
         try {
@@ -163,7 +175,7 @@ export function AccountTab({user}: { user: User }) {
                             </CardDescription>
                         </CardHeader>
                         <CardContent className="grid gap-6">
-                            <div className="grid gap-3">
+                            <div className="grid gap-3" hidden={isAdmin}>
                                 <Label htmlFor="tabs-demo-current">Current password</Label>
                                 <Input id="tabs-demo-current" type="password" value={password} onChange={(e) => {
                                     setPassword(e.target.value)
