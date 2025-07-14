@@ -29,7 +29,7 @@ export function LoginForm({
         setLoading(true);
 
         const redirection = {
-            'ADMIN': () => router.push("/admin"),
+            'ADMIN': (userId: string) => router.push(`/personal-notes/${userId}/admin`),
             'USER': (userId: string) => router.push(`/personal-notes/${userId}/directories`),
         }
 

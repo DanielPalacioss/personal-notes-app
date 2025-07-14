@@ -36,13 +36,16 @@ async function bootstrap() {
 
   const user = await userService.findByUsername(username);
   if (!user) {
-    await userService.create({
-      firstName,
-      lastName,
-      email,
-      password,
-      username,
-    });
+    await userService.create(
+      {
+        firstName,
+        lastName,
+        email,
+        password,
+        username,
+      },
+      true,
+    );
   }
 }
 

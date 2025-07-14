@@ -37,7 +37,7 @@ export function NavUser({user}: { user: User }) {
             );
             showToast({
                 title: "Success",
-                description: response.data?.message,
+                description: response.data.message,
                 type: "success",
             });
             router.push('/auth/login')

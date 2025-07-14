@@ -53,7 +53,6 @@ export class UserController {
     @Req() req: RequestWithUser,
     @Body() updateUserDto: UpdateUserDto,
   ) {
-    console.error(updateUserDto);
     if (req.user.role !== 'ADMIN' && req.user.sub !== id) {
       throw new UnauthorizedException('Not authorized');
     }

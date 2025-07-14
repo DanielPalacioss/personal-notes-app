@@ -1,6 +1,6 @@
 'use client'
 import {DirectoryList} from "@/components/directory-list";
-import {useRouter} from "next/navigation";
+import {useParams, useRouter} from "next/navigation";
 import {useEffect, useState} from "react";
 import axios from "axios";
 import {showToast} from "@/components/show-toast";
@@ -12,6 +12,7 @@ export default function Directories() {
 
     const router = useRouter();
     const [directories, setDirectories] = useState<Directory[]>([])
+    const params = useParams<{ userId: string}>()
 
     useEffect(() => {
         const fetchData = async () => {
@@ -38,7 +39,7 @@ export default function Directories() {
         <main className="p-4 w-full">
             <DirectoryList
                 directories={directories}
-                onSelect={(id) => router.push(`directories/${id}`)}
+                onSelect={(id) => router.push(`/personal-notes/${params.userId}/directories/${id}`)}
             />
             <AddDirectoryDialog/>
         </main>
