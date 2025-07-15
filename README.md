@@ -23,7 +23,7 @@ Gestión de notas personales que permite a los usuarios crear, editar, eliminar 
 
 - **Backend:** NestJS, Prisma (ORM y migraciones)
 - **Frontend:** Next.js, shadcn/ui
-- **Base de datos:** PostgreSQL (usando Prisma ORM)
+- **Base de datos:** SQL Server (usando Prisma ORM)
 - **Autenticación:** JSON Web Tokens (JWT) y cookies
 
 ---
