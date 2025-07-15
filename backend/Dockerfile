@@ -24,7 +24,7 @@ COPY --from=builder /app/dist ./dist
 COPY --from=builder /app/prisma ./prisma
 
 # Copia el script de arranque inteligente
-COPY entrypoint.sh .
+COPY entrypoint.sh ./
 RUN chmod +x entrypoint.sh
 
 # Comando de inicio del contenedor
