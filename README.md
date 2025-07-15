@@ -117,7 +117,7 @@ personal-notes-app/
 ├── backend/                  # API RESTful con NestJS
 │   ├── prisma/               # Esquema y migraciones de la base de datos
 ├── frontend/                 # Interfaz de usuario con Next.js
-├── diagramas-de-secuencia/   # Diagramas .puml (crear esta carpeta y mover aquí los archivos .puml)
+├── diagramas-de-secuencia/   # Diagramas .puml
 ```
 
 ---
