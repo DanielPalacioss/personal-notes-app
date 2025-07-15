@@ -48,15 +48,20 @@ Crea un archivo `.env` en la raíz del proyecto con las siguientes variables de 
 
 ```env
 # Variables para el Backend
-DB_HOST=localhost
-DB_PORT=5432
-DB_USER=postgres
-DB_PASSWORD=example_password
-DB_NAME=personal_notes
-JWT_SECRET=example_jwt_secret
+DATABASE_URL="sqlserver://localhost:1433;database=personal_notes_db;user=SA;password=Luda1202*;encrypt=false;trustServerCertificate=true;"
+JWT_SECRET=Megustaelarrozconqueso1*
+CORS_ORIGIN_PORT=http://localhost:3000
+PORT_BACKEND=4000
+DB_PASSWORD=Luda1202*
+ADMIN_NAME=Root
+ADMIN_LASTNAME=SUPER
+ADMIN_EMAIL=ADMIN@gmail.com
+ADMIN_USERNAME=ADMIN
+ADMIN_PASSWORD=ADMIN1202*
 
 # Variables para el Frontend
-NEXT_PUBLIC_API_URL=http://localhost:3000/api
+JWT_SECRET=Megustaelarrozconqueso1*
+NEXT_PUBLIC_API_URL=http://localhost:4000
 ```
 > **Nota:** Estos valores son ejemplos para una configuración rápida. Puedes usarlos tal cual para pruebas locales.
 
@@ -74,6 +79,9 @@ docker-compose up --build
 ```bash
 cd backend
 npm install
+
+# Genera el cliente de Prisma
+npx prisma generate
 npm run start:dev
 ```
 
@@ -122,7 +130,7 @@ personal-notes-app/
 - **Prisma en local:**  
   Si vas a ejecutar la app en local y no en Docker, elimina la línea  
   `binaryTargets = ["native", "linux-musl-openssl-3.0.x"]`  
-  que se encuentra en el archivo `prisma/schema.prisma`.
+  que se encuentra en el archivo `backend/prisma/schema.prisma`.
 
 ---
 
