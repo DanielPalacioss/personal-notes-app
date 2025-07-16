@@ -138,7 +138,7 @@ personal-notes-app/
 
 ¡Contribuciones son bienvenidas! Por favor, sigue estos pasos:
 
-1. Crea un fork del repositorio (no necesitas activar nada, si el repo es público cualquiera puede hacerlo).
+1. Crea un fork del repositorio.
 2. Clona tu fork y crea una rama para tus cambios.
 3. Realiza un pull request con una descripción detallada.
 
