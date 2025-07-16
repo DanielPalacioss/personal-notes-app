@@ -48,7 +48,7 @@ Crea un archivo `.env` en la raíz del proyecto con las siguientes variables de 
 
 ```env
 # Variables para el Backend
-DATABASE_URL="sqlserver://localhost:1433;database=personal_notes_db;user=SA;password=Luda1202*;encrypt=false;trustServerCertificate=true;"
+DATABASE_URL="sqlserver://sql-server:1433;database=personal_notes_db;user=SA;password=Luda1202*;encrypt=false;trustServerCertificate=true;"
 JWT_SECRET=Megustaelarrozconqueso1*
 CORS_ORIGIN_PORT=http://localhost:3000
 PORT_BACKEND=4000
